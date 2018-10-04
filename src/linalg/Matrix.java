@@ -64,7 +64,7 @@ public class Matrix {
 	 * 
 	 * @param o the object to compare to
 	 */
-	public boolean equals(Object o) { //TEST THE VECTOR VERSION AND THIS VERSION AND COMPARE 
+	public boolean equals(Object o) {  
 		if (o instanceof Matrix) {
 			Matrix m = (Matrix)o;
 			
@@ -84,7 +84,7 @@ public class Matrix {
 	 *   
 	 * @return 
 	 */
-	public int getNumRows() { //done
+	public int getNumRows() { 
 		return _nRows;
 	}
 
@@ -92,7 +92,7 @@ public class Matrix {
 	 *   
 	 * @return 
 	 */
-	public int getNumCols() { //done
+	public int getNumCols() { 
 		return _nCols;
 	}
 
@@ -103,7 +103,7 @@ public class Matrix {
 	 * @return
 	 * @throws LinAlgException if row or col indices are out of bounds
 	 */
-	public double get(int row, int col) throws LinAlgException { //CHECK THIS WHEN A MATRIX IS FULL
+	public double get(int row, int col) throws LinAlgException { 
 		if (row >= _nRows|| row < 0 || col >=_nCols || col <0) throw new LinAlgException("stuff is out of bounds");//if column or row out of bound, throw exception 
 		return _2dimadVal[row][col];
 	}
@@ -115,7 +115,7 @@ public class Matrix {
 	 * @throws LinAlgException if row is out of bounds
 	 */
 	
-	public Vector getRow(int row) throws LinAlgException { //tentatively done and tested 
+	public Vector getRow(int row) throws LinAlgException {  
 		if (row >= _nRows || row < 0) throw new LinAlgException("message"); 
 		Vector rowVector = new Vector(_nCols); //allocates space for a vector that has the same number of indices as columns in the matrix, initialized to zero 
 	    //double[] values = rowVector.getVal(); //
@@ -207,13 +207,13 @@ public class Matrix {
 	 */
 	public static Vector Multiply(Matrix m, Vector v) throws LinAlgException {
 		if(m._nCols != v.getDim()) throw new LinAlgException("message ");
-		Vector result = new Vector(m._nRows);
+		Vector result = new Vector(m._nRows); //new vector dimension # of rows of vector 
 		double val;
-		for (int i = 0; i < m._nRows; i ++) { 
-			val = 0;
-			for (int j = 0 ; j < v.getDim(); j++) {
+		for (int i = 0; i < m._nRows; i ++) {  //count through rows of matrix 
+			val = 0; //initialize value 
+			for (int j = 0 ; j < v.getDim(); j++) { //count through values of vector and columns of matrix 
 				val = val + m._2dimadVal[i][j] * v.getVal()[j];
-				result.set(i, val);
+				result.set(i, val); //set values in new vector 
 			}
 		}
 			return result;
