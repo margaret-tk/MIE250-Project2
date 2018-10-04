@@ -115,9 +115,13 @@ public class Vector {
 	 * 
 	 * @return: the dimensionality of this Vector
 	 */
-	public int getDim() {
-		// TODO (this should not return -1!)
-		return -1;
+	public int getDim() {  //returns the dimension of the vector to take private variable and return it publicly 
+		return _nDim;
+	}
+
+	
+	public double[] getVal() { //publicly return values 
+		return _adVal;
 	}
 
 	/** Returns the value of this vector at the given index (remember: array indices start at 0)
@@ -127,8 +131,10 @@ public class Vector {
 	 * @throws LinAlgException if array index is out of bounds (see throw examples above)
 	 */
 	public double get(int index) throws LinAlgException {
-		// TODO (this should not return -1.0!)
-		return -1.0;
+		if((index >= _nDim) || (index < 0)) //if index is greater than the dimension of the vector or less than 0 
+			throw new LinAlgException("Index " +index+ " is out of bounds [0," + (_nDim-1) + "]"); 
+		double valueAtIndex = this._adVal[index];//sets new double to the value at index 
+		return valueAtIndex; //returns value 
 	}
 
 	/** Set the value val of the vector at the given index (remember: array indices start at 0)
@@ -137,8 +143,11 @@ public class Vector {
 	 * @param val
 	 * @throws LinAlgException if array index is out of bounds (see throw examples above)
 	 */
-	public void set(int index, double val) throws LinAlgException {
-		// TODO
+	public void set(int index, double val) throws LinAlgException { //tentatively done-- check with solution code 
+		if((index >= _nDim) || (index < 0) ) //index greater to or equal to dim or less than 0 throws exception
+			throw new LinAlgException("Index " +index+ " is out of bounds [0," + (_nDim-1) + "]"); //do we actually need this throw, we did this in class and we didnt do a throw 
+		_adVal[index] = val; //sets value at index to val 
+		
 	}
 	
 	/** Change the dimension of this Vector by *reallocating array storage* and copying content over
@@ -149,8 +158,21 @@ public class Vector {
 	 * @param new_dim
 	 * @throws LinAlgException if vector dimension is < 1
 	 */
-	public void changeDim(int new_dim) {
-		// TODO
+	public void changeDim(int new_dim) throws LinAlgException {  
+		if(new_dim < 1 ) throw new LinAlgException("Vector dimension " + new_dim + " cannot be less than 1");
+		Vector j = new Vector(new_dim); //allocates space in memory for new vector with dim= new_dim, initialized to zero 
+		if (new_dim > _nDim) { //if new dimension is larger than old
+			for(int index = 0; index < _nDim; index++) { //copy old vector into new, remaining values stay 0 
+				j._adVal[index] = this._adVal[index];
+			}
+		}	
+		else if(new_dim < _nDim) {
+			for(int index = 0; index < new_dim; index++) {
+				j._adVal[index] = this._adVal[index]; //otherwise copy until end of new vector and stop
+		}
+		}
+		this._nDim = j._nDim; //pointer for this goes to j now, since changes were supposed to be made to this 
+		this._adVal = j._adVal;
 	}
 	
 	/** This adds a scalar d to all elements of *this* Vector
@@ -158,9 +180,9 @@ public class Vector {
 	 * 
 	 * @param d
 	 */
-	public void scalarAddInPlace(double d) {
+	public void scalarAddInPlace(double d) { 
 		for (int index = 0; index < _nDim; index++)
-			_adVal[index] += d;
+			_adVal[index] += d; //add d to every value at each index 
 	}
 	
 	/** This creates a new Vector, adds a scalar d to it, and returns it
@@ -169,9 +191,10 @@ public class Vector {
 	 * @param d
 	 * @return new Vector after scalar addition
 	 */
-	public Vector scalarAdd(double d) {
-		// TODO (this should not return null!)
-		return null;
+	public Vector scalarAdd(double d) { 
+		Vector newVector = new Vector(this);//creating new identical matrix to this 
+		newVector.scalarAddInPlace(d); //we added values in the copy instead of the original 
+		return newVector;
 	}
 	
 	/** This multiplies a scalar d by all elements of *this* Vector
@@ -179,8 +202,9 @@ public class Vector {
 	 * 
 	 * @param d
 	 */
-	public void scalarMultInPlace(double d) {
-		// TODO
+	public void scalarMultInPlace(double d) { 
+		for (int index = 0; index < _nDim; index++) //counts through indices 
+			_adVal[index] = _adVal[index] * d; //multiplies each value by d 
 	}
 	
 	/** This creates a new Vector, multiplies it by a scalar d, and returns it
@@ -190,8 +214,9 @@ public class Vector {
 	 * @return new Vector after scalar addition
 	 */
 	public Vector scalarMult(double d) {
-		// TODO (this should not return null!)
-		return null;
+		Vector newVector = new Vector(this);//("this" means that we're using the created vector that is being called by the function in the sample case 
+		newVector.scalarMultInPlace(d); 
+		return newVector;
 	}
 
 	/** Performs an elementwise addition of v to *this*, modifies *this*
@@ -199,8 +224,11 @@ public class Vector {
 	 * @param v
 	 * @throws LinAlgException if dimensions of the two operand vectors do not match
 	 */
-	public void elementwiseAddInPlace(Vector v) throws LinAlgException {
-		// TODO
+	public void elementwiseAddInPlace(Vector v) throws LinAlgException { 
+		if (v._nDim != this._nDim) throw new LinAlgException("Cannot elementWiseAdd vectors of different dimensions " + this._nDim + " and " + v._nDim);
+		for (int index = 0; index < _nDim; index++) { //counts through indices 
+			this._adVal[index] = this._adVal[index] + v._adVal[index]; //modifies this, adds values of v to values of this 
+		}
 	}
 
 	/** Performs an elementwise addition of *this* and v and returns a new Vector with result
@@ -210,8 +238,9 @@ public class Vector {
 	 * @throws LinAlgException if dimensions of the two operand vectors do not match
 	 */
 	public Vector elementwiseAdd(Vector v) throws LinAlgException {
-		// TODO (this should not return null!)
-		return null;
+		Vector newVector = new Vector(this);
+		newVector.elementwiseAddInPlace(v);
+		return newVector;
 	}
 	
 	/** Performs an elementwise multiplication of v and *this*, modifies *this*
@@ -220,7 +249,10 @@ public class Vector {
 	 * @throws LinAlgException if dimensions of the two operand vectors do not match
 	 */
 	public void elementwiseMultInPlace(Vector v) throws LinAlgException {
-		// TODO
+		if (v._nDim != this._nDim) throw new LinAlgException("Cannot elementwiseMult vectors of different dimensions " + this._nDim + " and " + v._nDim);
+		for (int index = 0; index < _nDim; index++) { 
+			this._adVal[index] = this._adVal[index] * v._adVal[index]; 
+		}
 	}
 
 	/** Performs an elementwise multiplication of *this* and v and returns a new Vector with result
@@ -229,9 +261,11 @@ public class Vector {
 	 * @return
 	 * @throws LinAlgException if dimensions of the two operand vectors do not match
 	 */
-	public Vector elementwiseMult(Vector v) throws LinAlgException {
-		// TODO (this should not return null!)
-		return null;
+	public Vector elementwiseMult(Vector v) throws LinAlgException { //done
+		Vector newVector = new Vector(this);
+		newVector.elementwiseMultInPlace(v);
+		return newVector;
+		
 	}
 
 	/** Performs an inner product of Vectors v1 and v2 and returns the scalar result
@@ -241,8 +275,13 @@ public class Vector {
 	 * @return
 	 * @throws LinAlgException
 	 */
-	public static double InnerProd(Vector v1, Vector v2) throws LinAlgException {
-		// TODO (this should not return -1.0!)
-		return -1.0;
+	public static double InnerProd(Vector v1, Vector v2) throws LinAlgException {//done 
+		if (v1._nDim != v2._nDim) throw new LinAlgException("Cannot InnerProd vectors of different dimensions " + v1._nDim + " and " + v2._nDim);
+		double result = 0; 
+		for (int index = 0; index < v1._nDim; index++) { //count through each value, multiply two values at same index and add to result in a loop 
+			result = result + v1._adVal[index]*v2._adVal[index]; //counter, adds to result each time 
+		} 
+		return result; 
 	}
+
 }
